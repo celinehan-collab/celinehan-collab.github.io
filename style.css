@@ -150,12 +150,11 @@ h4 {
 }
 
 p {
-  margin-bottom: var(--space-sm);
+  margin-bottom: 1.4em;
 }
 
 p + p {
-  text-indent: 1.5em;
-  margin-bottom: var(--space-sm);
+  margin-bottom: 1.4em;
 }
 
 a {
@@ -1528,4 +1527,94 @@ td {
 
 .royal-emblem-link:hover .royal-emblem {
   filter: drop-shadow(0 4px 12px rgba(168, 128, 107, 0.2));
+}
+
+
+/* ===== Navbar Monogram (Pennings feedback: needs version without ornate surroundings) ===== */
+.nav-monogram {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.6rem;
+  color: var(--accent-hover);
+  letter-spacing: 0.05em;
+  line-height: 1;
+  display: inline-block;
+  padding: 0 0.1em;
+}
+
+.nav-monogram-amp {
+  font-style: normal;
+  color: var(--gold);
+  font-size: 0.7em;
+  margin: 0 0.1em;
+  vertical-align: 0.15em;
+  opacity: 0.8;
+}
+
+/* Hide old nav-mark img if still referenced anywhere */
+.nav-mark {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .nav-monogram {
+    font-size: 1.35rem;
+  }
+}
+
+
+/* ===== Footer Monogram (matches navbar) ===== */
+.footer-monogram {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 2rem;
+  color: var(--accent-hover);
+  letter-spacing: 0.05em;
+  line-height: 1;
+  margin: 0 0 var(--space-md);
+  padding: 0;
+}
+
+.footer-monogram-amp {
+  font-style: normal;
+  color: var(--gold);
+  font-size: 0.6em;
+  margin: 0 0.15em;
+  vertical-align: 0.15em;
+  opacity: 0.8;
+}
+
+
+/* ===== Nav Mark Image (Simple navbar logo, Pennings feedback) ===== */
+.nav-mark {
+  height: 32px;
+  width: auto;
+  display: inline-block;
+  vertical-align: middle;
+  transition: opacity 0.2s ease;
+}
+
+.nav-brand:hover .nav-mark {
+  opacity: 0.8;
+}
+
+/* ===== Footer Mark Image ===== */
+.footer-mark {
+  height: 56px;
+  width: auto;
+  margin: 0 auto var(--space-md);
+  display: block;
+  opacity: 0.92;
+}
+
+@media (max-width: 768px) {
+  .nav-mark {
+    height: 28px;
+  }
+  
+  .footer-mark {
+    height: 48px;
+  }
 }

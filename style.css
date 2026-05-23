@@ -266,7 +266,7 @@ hr {
 .nav {
   background: var(--bg-elevated);
   border-bottom: 1px solid var(--border);
-  padding: var(--space-sm) 0;
+  padding: 0.5rem 0;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -1008,8 +1008,8 @@ td {
 
 /* ===== Nav mark (small icon in nav) ===== */
 .nav-mark {
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   margin-right: 0;
   vertical-align: middle;
   display: inline-block;
@@ -1589,7 +1589,7 @@ td {
 
 /* ===== Nav Mark Image (Simple navbar logo, Pennings feedback) ===== */
 .nav-mark {
-  height: 80px;
+  height: 100px;
   width: auto;
   display: inline-block;
   vertical-align: middle;
@@ -1611,7 +1611,7 @@ td {
 
 @media (max-width: 768px) {
   .nav-mark {
-    height: 64px;
+    height: 72px;
   }
   
   .footer-mark {

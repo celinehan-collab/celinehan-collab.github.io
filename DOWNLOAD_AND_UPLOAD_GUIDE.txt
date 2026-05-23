@@ -1,0 +1,80 @@
+📥 파일 다운로드 & GitHub 직접 업로드 가이드
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Step 1: 파일 다운로드
+
+아래 파일들을 다운로드해서 한 폴더에 모아:
+
+HTML 파일 (4개):
+1. index.html
+2. essay.html
+3. about.html
+4. style.css
+
+이미지 파일 (3개):
+5. logo-large.png
+6. logo-bw.png
+7. logo-icon.png
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Step 2: GitHub에 직접 업로드
+
+1. https://github.com/celinehan-collab/celinehan-collab.github.io 방문
+
+2. 각 파일을 하나씩 업로드:
+
+   index.html:
+   - "Add file" → "Upload files"
+   - 파일 선택
+   - Commit message: "Update index with enhanced pull quote"
+   - "Commit changes" 클릭
+
+   essay.html:
+   - "Add file" → "Upload files"
+   - 파일 선택
+   - Commit message: "Add epigraph to essay introduction"
+   - "Commit changes" 클릭
+
+   about.html:
+   - "Add file" → "Upload files"
+   - 파일 선택
+   - Commit message: "Add design philosophy section"
+   - "Commit changes" 클릭
+
+   style.css:
+   - "Add file" → "Upload files"
+   - 파일 선택
+   - Commit message: "Enhance pull quote and add epigraph styles"
+   - "Commit changes" 클릭
+
+   로고 파일들 (logo-large.png, logo-bw.png, logo-icon.png):
+   - 각각 "Add file" → "Upload files"
+   - 파일 선택
+   - Commit message: "Update optimized logo files"
+   - "Commit changes" 클릭
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Step 3: 확인
+
+1-2분 기다린 후:
+
+https://celinehan-collab.github.io 새로고침 (Ctrl+Shift+R)
+
+확인할 것:
+✓ Pull quote가 "Denotation fixes meaning..." (이미 보일 수도)
+✓ Essay 페이지에 Margaret Morse 인용구 (Epigraph)
+✓ About 페이지에 "The Design Philosophy" 섹션
+✓ 로고가 깔끔해짐
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💡 팁
+
+- 한 번에 여러 파일을 업로드하면 충돌날 수 있으니 하나씩 하기
+- "Commit message"는 뭐라고 적어도 되지만, 위의 예시처럼 하면 좋음
+- 캐시 때문에 바뀐 게 안 보일 수 있으니 Ctrl+Shift+R로 강제 새로고침
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

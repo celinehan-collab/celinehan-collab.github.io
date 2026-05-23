@@ -1008,8 +1008,8 @@ td {
 
 /* ===== Nav mark (small icon in nav) ===== */
 .nav-mark {
-  width: 56px;
-  height: 56px;
+  width: 80px;
+  height: 80px;
   margin-right: 0;
   vertical-align: middle;
   display: inline-block;
@@ -1589,7 +1589,7 @@ td {
 
 /* ===== Nav Mark Image (Simple navbar logo, Pennings feedback) ===== */
 .nav-mark {
-  height: 56px;
+  height: 80px;
   width: auto;
   display: inline-block;
   vertical-align: middle;
@@ -1611,7 +1611,7 @@ td {
 
 @media (max-width: 768px) {
   .nav-mark {
-    height: 44px;
+    height: 64px;
   }
   
   .footer-mark {

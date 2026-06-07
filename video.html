@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Born of Foam &middot; Jooyeon Han &middot; EST 240</title>
+<meta name="description" content="An AI-generated hook-and-twist video applying mise-en-scene and montage. By Jooyeon Han, EST 240, SUNY Korea.">
+<link rel="icon" type="image/png" href="logo-icon.png">
+<link rel="stylesheet" href="style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Libre+Caslon+Display&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  /* 로컬 mp4 영상용 (기존 video-embed는 iframe 비율 고정이라 16:9 박스만 추가) */
+  .film-frame{
+    position:relative;width:100%;margin:var(--space-lg) 0;
+    border:1px solid var(--border);background:var(--bg-card);
+    padding:14px;border-radius:var(--radius);
+    box-shadow:0 24px 50px -28px rgba(120,90,60,.35);
+  }
+  .film-frame::before{
+    content:"";position:absolute;inset:6px;border:1px solid var(--gold);opacity:.35;pointer-events:none;border-radius:2px;
+  }
+  .film-frame video{width:100%;display:block;border-radius:2px;}
+  .film-placeholder{
+    aspect-ratio:16/9;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;
+    background:radial-gradient(circle at 50% 40%, rgba(201,168,118,.16), transparent 60%), linear-gradient(135deg,#f6efe2,#efe5d3);
+    font-family:var(--font-ui);font-size:.8rem;color:var(--text-tertiary);text-align:center;border-radius:2px;
+  }
+  .film-placeholder .mk{font-family:var(--font-display);font-style:italic;font-size:1.6rem;color:var(--accent);}
+  .stills-pair{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md);margin:var(--space-lg) 0;}
+  .stills-pair .ph{
+    aspect-ratio:4/5;display:flex;align-items:center;justify-content:center;
+    border:1px solid var(--border);background:linear-gradient(160deg,#f7f0e3,#ece0cd);
+    font-family:var(--font-display);font-style:italic;color:var(--text-tertiary);font-size:1.05rem;border-radius:var(--radius);
+  }
+  .stills-pair img{width:100%;display:block;border:1px solid var(--border);border-radius:var(--radius);}
+  .stills-pair figcaption{font-family:var(--font-ui);font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);text-align:center;padding-top:.7rem;}
+  .prompt-card{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
+    padding:var(--space-md);margin:var(--space-sm) 0;
+  }
+  .prompt-card .pc-head{font-family:var(--font-ui);font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:.7rem;}
+  .prompt-card p{font-family:var(--font-ui);font-size:.86rem;line-height:1.7;color:var(--text-secondary);}
+  .tech-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin:var(--space-md) 0;}
+  .tech-grid > div{background:var(--bg-card);padding:var(--space-md);}
+  .tech-grid .tg-tag{font-family:var(--font-ui);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:.5rem;}
+  .tech-grid h4{font-family:var(--font-display);font-size:1.25rem;color:var(--text-secondary);margin:0 0 .3rem;}
+  .tech-grid p{font-size:.95rem;color:var(--text-secondary);margin:0;}
+  @media(max-width:680px){.stills-pair,.tech-grid{grid-template-columns:1fr;}}
+
+  /* --- 경쟁작 대응 추가 컴포넌트 --- */
+  .concept-box{background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:var(--radius);padding:var(--space-md) var(--space-lg);margin:var(--space-md) 0;}
+  .concept-box .cb-label{font-family:var(--font-ui);font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:.4rem;}
+  .concept-box .cb-title{font-family:var(--font-display);font-size:1.5rem;font-style:italic;color:var(--text-secondary);margin-bottom:.6rem;}
+  .concept-box p{font-size:1.02rem;color:var(--text-secondary);margin:0;line-height:1.6;}
+  .concept-box .cb-msg{font-family:var(--font-display);font-style:italic;font-size:1.15rem;color:var(--text-primary,#5a4a32);margin-top:.7rem;}
+
+  .breakdown-table{width:100%;border-collapse:collapse;margin:var(--space-md) 0;font-family:var(--font-body);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+  .breakdown-table thead th{background:var(--gold);color:#fff;font-family:var(--font-ui);font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;padding:.85rem 1rem;text-align:left;font-weight:500;}
+  .breakdown-table thead th:first-child{background:var(--text-secondary);}
+  .breakdown-table td{padding:.85rem 1rem;border-top:1px solid var(--border);vertical-align:top;font-size:.96rem;color:var(--text-secondary);line-height:1.5;}
+  .breakdown-table tbody tr:nth-child(even){background:var(--bg-card);}
+  .breakdown-table td:first-child{font-family:var(--font-ui);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:500;white-space:nowrap;width:18%;}
+  @media(max-width:680px){.breakdown-table td:first-child{width:auto;}.breakdown-table{font-size:.85rem;}}
+
+  .prompt-structure{list-style:none;padding:0;margin:var(--space-sm) 0;}
+  .prompt-structure li{padding:.6rem 0;border-bottom:1px solid var(--border-subtle);font-size:1.02rem;color:var(--text-secondary);}
+  .prompt-structure li:last-child{border-bottom:none;}
+  .prompt-structure .ps-key{font-family:var(--font-ui);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);display:inline-block;min-width:130px;}
+
+  .concept-count{display:flex;gap:var(--space-md);margin:var(--space-md) 0;flex-wrap:wrap;}
+  .concept-count > div{flex:1;min-width:240px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-md);}
+  .concept-count .cc-head{display:flex;align-items:baseline;gap:.6rem;margin-bottom:.7rem;}
+  .concept-count .cc-domain{font-family:var(--font-display);font-size:1.3rem;color:var(--text-secondary);}
+  .concept-count .cc-num{font-family:var(--font-ui);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:#fff;background:var(--gold);padding:.18rem .6rem;border-radius:20px;}
+  .concept-count ul{list-style:none;padding:0;margin:0;}
+  .concept-count li{font-size:.96rem;color:var(--text-secondary);padding:.28rem 0;padding-left:1.1rem;position:relative;}
+  .concept-count li::before{content:"\2766";position:absolute;left:0;color:var(--gold);font-size:.8rem;}
+
+</style>
+</head>
+<body>
+
+<!-- ===== Navigation ===== -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="about.html" class="nav-brand" aria-label="Home">
+      <img src="nav-mark.png" alt="" class="nav-mark">
+    </a>
+    <ul class="nav-menu">
+      <li><a href="index.html" class="nav-link">Home</a></li>
+      <li><a href="essay.html" class="nav-link">Essay</a></li>
+      <li><a href="video.html" class="nav-link active">Video</a></li>
+      <li><a href="logo.html" class="nav-link">Logo</a></li>
+      <li><a href="about.html" class="nav-link">About</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ===== Royal Hero ===== -->
+<section class="royal-hero">
+  <div class="royal-label">
+    The AI Video
+  </div>
+
+  <h1 class="royal-title">Born of Foam</h1>
+  <p class="royal-subtitle">A Hook-and-Twist Study in Mise-en-Sc&egrave;ne and Montage</p>
+
+  <p class="royal-motto">Ex spuma, forma</p>
+
+  <p class="royal-meta">
+    <span>Jooyeon Han</span>
+    <span class="royal-meta-divider">&middot;</span>
+    <span>EST 240</span>
+    <span class="royal-meta-divider">&middot;</span>
+    <span>Eight Seconds</span>
+  </p>
+</section>
+
+<!-- ===== Main Content ===== -->
+<div class="container">
+
+  <p class="eyebrow">Individual AI Video &middot; Mise-en-Sc&egrave;ne and Montage</p>
+
+  <h1 class="page-title">Born of Foam.</h1>
+
+  <p class="lead">An eight-second video that opens as abstraction and closes as a goddess. What the eye cannot read becomes, in a single movement of the camera, Aphrodite.</p>
+
+  <p class="paper-meta">EST 240 Visual Rhetoric &amp; Information Technology &middot; Instructor Dr. Anthony J. Pennings &middot; June 2026 &middot; Generated with Kling 3.0</p>
+
+  <div class="divider"><span class="divider-ornament">&#10086;</span></div>
+
+  <!-- Featured Video -->
+  <p class="eyebrow-small">The final video</p>
+  <div class="film-frame">
+    <video controls playsinline poster="twist.jpg"><source src="final.mp4" type="video/mp4"></video>
+  </div>
+  <p class="video-caption"><em>Born of Foam</em> (Jooyeon Han, 2026). Watch with sound. Beauty arrives before it can be named.</p>
+
+
+  <!-- ===== Concept & Rhetorical Message ===== -->
+  <div class="concept-box">
+    <div class="cb-label">Concept</div>
+    <div class="cb-title">Born of Foam &middot; The Birth of Recognition</div>
+    <p>An extreme close-up of sea foam and light, beautiful but unreadable, pulls back to reveal a goddess rising from the water. The everyday act of looking becomes a small myth of recognition.</p>
+    <p class="cb-msg">Rhetorical message. Beauty is not given by the subject but granted by the frame. We see a goddess only when the distance allows it.</p>
+  </div>
+
+  <!-- ===== Introduction ===== -->
+  <div class="section-ornament">&#10086;</div>
+  <h2>Introduction</h2>
+<p class="dropcap">This video was made for the AI Mise-en-Sc&egrave;ne and Montage assignment, which asks for a short hook-and-twist narrative that demonstrates the technical vocabulary of the course. The brief is deceptively simple. A hook must arrest the viewer in the first three to five seconds, a twist must reframe the whole piece in the last three to five seconds, and the reversal must be earned through visual cues rather than text or voiceover [19]. The constraint is the lesson. Eight seconds leaves no room for exposition, so every choice of framing, light, and cut has to carry argument on its own. The piece offered here, <em>Born of Foam</em>, treats that constraint as its subject. It is a study of how the frame itself decides what a viewer is able to see.</p>
+
+  <p>The hook presents an extreme close-up of pearlescent sea foam and white feathers on shimmering water, lit by a low golden sun. For the first four seconds the image is beautiful and unreadable, an abstraction of white and gold that the eye enjoys without recognizing. The twist arrives as a single slow dolly backward. The abstraction resolves, without a cut, into the figure of a woman rising from the sea in a flowing gown, foam and rose petals turning around her, the long tradition of the Aphrodite who is born of foam made suddenly legible. Nothing is added at the reveal. The goddess was present in the first frame. The viewer simply could not read her until the camera pulled back and granted the distance that legibility requires.</p>
+
+  <p>The analysis that follows reads the piece through the working vocabulary of EST 240. It treats the close-up, the dolly back, and the dissolve as choices in mise-en-sc&egrave;ne and montage, and it places the reversal within three theoretical frames that the course has supplied, the naturalization of codes in Daniel Chandler, the organization of the gaze in Laura Mulvey, and the second-order signification of the color white in Roland Barthes. The aim throughout is to show that the rhetorical effect is not a happy accident of a generative model but the result of decisions that can be named and defended.</p>
+
+  <!-- ===== Section 1 ===== -->
+  <div class="section-ornament">&#10086;</div>
+  <h2>1. The Hook. Composition as Withholding</h2>
+<p class="dropcap">The hook is built on a single principle of composition, that an extreme close-up converts a recognizable subject into pure texture. Bordwell and Thompson [3] describe framing as the most basic instrument of mise-en-sc&egrave;ne, the means by which a film decides what the viewer may and may not attend to. The close-up here is not used to magnify a detail of a known whole, as it usually is, but to withhold the whole entirely. The foam, the feathers, and the strands of pale hair fill the frame at a scale that defeats recognition. The viewer is given beauty without reference, an image that asks to be admired before it can be understood.</p>
+
+  <p>The micro-movements within the static frame are what keep the hook alive. The foam swells and dissolves, the scattered light twinkles across the surface, a single droplet slides and catches the sun. These small motions supply the sense of a living surface that a frozen image would lack, and they hold attention through the four seconds the hook requires without ever resolving the question of what is being seen. The lighting is doing rhetorical work as well. The warm, low, volumetric sun lends the abstraction a sacred quality before any figure appears, so that the eventual reveal feels less like a surprise than like a recognition of something the light had already promised.</p>
+
+  <!-- ===== Section 2 ===== -->
+  <div class="section-ornament">&#10086;</div>
+  <h2>2. The Twist. Dolly Back and Dissolve</h2>
+<p class="dropcap">The twist is carried by two coordinated devices, a camera movement and an edit. A slow, steady dolly backward pulls away from the foam, and at the hinge of the piece a brief cross-dissolve carries the abstract close-up into the wider shot in which the goddess resolves. The dissolve is the central montage choice. Where a hard cut would assert the reversal abruptly, the dissolve lets one image bleed into the next, so the foam and the figure occupy the same frame for a moment before the figure wins. Chandler [4] lists the dissolve among the basic editing transitions, noting that it conventionally signals a soft passage rather than a rupture, and that convention is exactly what the piece exploits. The reversal feels less like a reveal imposed on the viewer than like a recognition that surfaces from within the image.</p>
+
+  <p>The dissolve also operates as a match on form. The pearlescent texture of the hook is continuous with the curve of the shoulder and the fall of the hair that emerge in the twist, so the two shots blend across the transition as a clarification of the same surface rather than a replacement of one subject by another. Kuleshov and Eisenstein argued that meaning in moving images is produced between shots, in the relation the viewer is led to construct across an edit [3]. Here that relation is built precisely at the dissolve, between the abstraction that precedes it and the figure that follows, and the viewer who completes the relation is the one who makes the meaning.</p>
+
+  <!-- ===== Four Technical Concepts ===== -->
+  <div class="section-ornament">&#10086;</div>
+  <h2>3. Four Technical Concepts</h2>
+<p class="dropcap">The assignment asks for the skillful use of at least four concepts drawn from mise-en-sc&egrave;ne and montage. The piece deploys four, two from each domain, and each is used in the service of the central reversal rather than as ornament.</p>
+
+  <div class="tech-grid">
+    <div><div class="tg-tag">Mise-en-Sc&egrave;ne</div><h4>Lighting</h4><p>A low, warm, volumetric sun haloes the surface, lending the abstraction a sacred quality before any figure is visible. The light makes the goddess felt before she is seen.</p></div>
+    <div><div class="tg-tag">Mise-en-Sc&egrave;ne</div><h4>Composition</h4><p>The extreme close-up frames a recognizable subject as pure texture. Framing, not subject, decides what the eye is able to read.</p></div>
+    <div><div class="tg-tag">Montage</div><h4>Camera Movement</h4><p>A single slow dolly backward is the rhetorical engine of the piece. The pull away is what converts abstraction into figure.</p></div>
+    <div><div class="tg-tag">Montage</div><h4>Dissolve</h4><p>A brief cross-dissolve carries the abstract close-up into the wider shot, blending foam and figure for a moment so the reversal reads as a soft passage rather than a rupture.</p></div>
+  </div>
+
+
+  <h3 style="font-family:var(--font-display);font-size:1.5rem;color:var(--text-secondary);margin-top:2rem;">Class Concepts Demonstrated</h3>
+  <div class="concept-count">
+    <div>
+      <div class="cc-head"><span class="cc-domain">Mise-en-Sc&egrave;ne</span><span class="cc-num">2 concepts</span></div>
+      <ul>
+        <li>Lighting. Warm volumetric sun haloing the surface and figure</li>
+        <li>Composition. Extreme close-up to wide shot, framing as withholding</li>
+      </ul>
+    </div>
+    <div>
+      <div class="cc-head"><span class="cc-domain">Montage</span><span class="cc-num">2 concepts</span></div>
+      <ul>
+        <li>Dissolve. Cross-dissolve carrying the close-up into the wide shot</li>
+        <li>Match on form. Foam texture matched to the curve of the shoulder</li>
+      </ul>
+    </div>
+  </div>
+  <p style="font-size:.95rem;color:var(--text-tertiary);font-style:italic;">Four class concepts in total, two from each domain, each in service of the reversal rather than as ornament.</p>
+
+  <!-- ===== Theory ===== -->
+  <div class="section-ornament">&#10086;</div>
+  <h2>4. Three Theoretical Frames</h2>
+<p class="dropcap">The piece can be read more fully through three frames the course has supplied. Each connects a formal choice to a body of theory, and together they show that the reversal is an argument about perception rather than a visual trick.</p>
+
+  <p><strong>Daniel Chandler.</strong> Codes become naturalized when viewers stop noticing them [4]. The convention by which an extreme close-up reads as abstract texture is one such code, so habitual that the viewer mistakes it for a property of the image rather than a convention of framing. The dolly back denaturalizes the code. The surface that read as abstraction is shown to have been a body all along, and the viewer is made aware that it was the frame, not the subject, that had decided what could be seen.</p>
+
+  <p><strong>Laura Mulvey.</strong> The image organizes a way of looking [14]. As the goddess resolves into view she becomes a figure composed and lit to be looked at, and the slow reveal stages the very to-be-looked-at-ness that Mulvey describes. The piece does not simply present a beautiful figure. It makes the viewer aware of the position of admiring spectatorship into which the image places them, and of the long tradition of the displayed female nude in Western art to which the Aphrodite motif belongs.</p>
+
+  <p><strong>Roland Barthes.</strong> Signs carry a second order of meaning beyond their literal denotation [2]. Foam denotes sea spray. It connotes purity, birth, and the sacred, and the myth of Aphrodite is already encoded in the color white before any figure appears. The piece lets that mythic meaning surface slowly, so that the viewer feels the significance of the image arrive before they are able to name its source.</p>
+
+  <!-- ===== Conclusion ===== -->
+  <div class="section-ornament">&#10086;</div>
+  <h2>Conclusion</h2>
+<p class="dropcap">The brief asked for a hook, a twist, and four technical concepts in eight seconds. <em>Born of Foam</em> answers with a dolly back and a dissolve that together convert an abstraction into a goddess and, in doing so, make the act of seeing its real subject. The hook withholds through composition. The twist bestows through camera movement and a soft cut. The light prepares the meaning and the dissolve delivers it. Read through Chandler, Mulvey, and Barthes, the reversal is not a surprise but a lesson, that the frame decides what a viewer is permitted to recognize, and that beauty, given the right distance, was there from the first frame.</p>
+
+  <!-- ===== The Prompts ===== -->
+  <div class="section-ornament">&#10086;</div>
+  <h2>The Prompts</h2>
+<p>The video was generated in Kling 3.0 from the single text-to-video prompt below, then trimmed to eight seconds. The prompt is disclosed in full in the spirit of the course requirement to document AI process.</p>
+
+  <div class="prompt-card">
+    <div class="pc-head">Generation Prompt &middot; Kling 3.0</div>
+    <p>Extreme close up of luminous pearlescent sea foam and white feathers on shimmering golden water, then the camera slowly pulls back to reveal a serene goddess in a flowing white gown standing in the sea, pale hair flowing over noble features, white rose petals and foam swirling around her, golden morning sunlight haloing her figure. Slow steady dolly backward, smooth and continuous, no shake. Oil painting texture, Pre-Raphaelite and Bouguereau aesthetic, pearlescent white and gold palette, soft volumetric light, painterly, ethereal, high detail, 4K.</p>
+  </div>
+
+  <h3 style="font-family:var(--font-display);font-size:1.5rem;color:var(--text-secondary);margin-top:2rem;">Prompt Breakdown &middot; Hook vs Twist</h3>
+  <table class="breakdown-table">
+    <thead>
+      <tr><th>Element</th><th>Hook (0&ndash;3.8s)</th><th>Twist (3.8&ndash;8s)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Subject</td><td>Pearlescent sea foam, white feathers, drifting hair</td><td>A goddess in a flowing white gown rising from the sea</td></tr>
+      <tr><td>Action</td><td>Foam swells and dissolves, a droplet catches the light</td><td>The figure resolves into view as water streams from her</td></tr>
+      <tr><td>Setting</td><td>Extreme close-up of the water surface at dawn</td><td>Wide shot of the open sea, foam and rose petals around her</td></tr>
+      <tr><td>Camera</td><td>Static frame, almost imperceptible drift</td><td>Slow steady dolly backward, settling to a stop</td></tr>
+      <tr><td>Lighting</td><td>Low warm volumetric sun, golden sparkle on foam</td><td>Golden backlight haloing the figure</td></tr>
+      <tr><td>Color</td><td>White and pale gold, abstraction</td><td>White and warm gold, figure made legible</td></tr>
+      <tr><td>Transition</td><td colspan="2">Cross-dissolve on matching form, foam texture bleeding into the curve of the shoulder</td></tr>
+    </tbody>
+  </table>
+
+  <h3 style="font-family:var(--font-display);font-size:1.5rem;color:var(--text-secondary);margin-top:2rem;">Prompt Structure</h3>
+  <ul class="prompt-structure">
+    <li><span class="ps-key">Shot Type</span> Extreme close-up to wide shot</li>
+    <li><span class="ps-key">Subject</span> Sea foam resolving into a goddess, Aphrodite born of foam</li>
+    <li><span class="ps-key">Hook</span> An abstraction of white and gold the eye cannot yet read</li>
+    <li><span class="ps-key">Twist</span> The dolly back reveals the figure that was always present</li>
+    <li><span class="ps-key">Camera</span> Slow steady dolly backward, no shake</li>
+    <li><span class="ps-key">Transition</span> Cross-dissolve matched on form</li>
+    <li><span class="ps-key">Style</span> Pre-Raphaelite and Bouguereau, pearlescent white and gold, painterly</li>
+  </ul>
+
+  <!-- ===== Stills ===== -->
+  <div class="section-ornament">&#10086;</div>
+  <h2>Hook and Twist</h2>
+<p>Two stills mark the rhetorical hinge of the piece, the abstraction that opens it and the figure that closes it.</p>
+
+  <div class="stills-pair">
+    <figure>
+      <img src="hook.jpg" alt="The hook. Pearlescent abstraction.">
+      <figcaption>Hook &middot; The Abstraction</figcaption>
+    </figure>
+    <figure>
+      <img src="twist.jpg" alt="The twist. The goddess revealed.">
+      <figcaption>Twist &middot; The Goddess</figcaption>
+    </figure>
+  </div>
+
+
+  <!-- ===== AI Tool & Process ===== -->
+  <div class="section-ornament">&#10086;</div>
+  <h2>AI Tool and Process</h2>
+<p class="dropcap">The video was generated entirely in Kling 3.0, the most recent model available at the time of production, using a single text-to-video prompt rather than an image-to-video pipeline. The first generations attempted to stage the whole reveal within one continuous instruction and produced weak, unreadable motion, a useful lesson in the limits of the current models. The working version separated the task the model does well, a single slow dolly back over a coherent scene, from the task it does poorly, a complex multi-stage transformation. An early prompt was also rejected by the platform's content filter for describing a bare figure, and was revised to specify a flowing gown, which both cleared the filter and strengthened the painterly reference to the Pre-Raphaelite tradition.</p>
+
+  <p>The ten-second generation was then edited in post. It was cut into a hook clip and a twist clip, rejoined with a cross-dissolve on matching form, and trimmed to eight seconds to meet the brief. This editing step is where the montage of the piece physically lives, the dissolve and the match are decisions made in the cut rather than effects requested from the model. The disclosure of this process, including the failed attempts, is offered in the spirit of the assignment's requirement to document AI craft honestly.</p>
+
+  <!-- ===== References ===== -->
+  <div class="section-ornament">&#10086;</div>
+  <h2>References</h2>
+  <ol class="references">
+    <li>Barthes, R. (1972). <em>Mythologies</em> (A. Lavers, Trans.). Hill and Wang. (Original work published 1957).</li>
+    <li>Bordwell, D., &amp; Thompson, K. (2019). <em>Film Art. An Introduction</em> (12th ed.). McGraw-Hill.</li>
+    <li>Chandler, D. (1994). <em>The Grammar of Television and Film</em>. Aberystwyth University.</li>
+    <li>Mulvey, L. (1975). Visual Pleasure and Narrative Cinema. <em>Screen, 16</em>(3), 6 to 18.</li>
+    <li>Pennings, A. J. (2019). <em>Visual Rhetoric Analysis of a YouTube Channel</em>. apennings.com.</li>
+  </ol>
+
+</div>
+
+<!-- ===== Footer ===== -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-cols">
+      <div class="footer-col">
+        <p class="footer-col-title">About</p>
+        <p class="footer-col-text">Individual website for EST 240 Visual Rhetoric and Information Technology, taught by Dr. Anthony J. Pennings, Department of Technology and Society, SUNY Korea.</p>
+      </div>
+      <div class="footer-col">
+        <p class="footer-col-title">Pages</p>
+        <ul class="footer-list">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="essay.html">Essay &middot; Inhabiting the Scholar</a></li>
+          <li><a href="video.html">Video &middot; Born of Foam</a></li>
+          <li><a href="logo.html">Logo &amp; AI Prompts</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <p class="footer-col-title">Course</p>
+        <ul class="footer-list">
+          <li><a href="https://apennings.com/technologies-of-meaning/visual-rhetoric-analysis-of-a-youtube-channel/" target="_blank" rel="noopener">Visual Rhetoric Analysis of a YouTube Channel</a></li>
+          <li><a href="https://apennings.com/media-strategies/analyzing-youtube-channels/" target="_blank" rel="noopener">Analyzing YouTube Channels</a></li>
+          <li><a href="https://apennings.com/media-strategies/show-biz-anchoring-the-financial-imagination/" target="_blank" rel="noopener">Anchoring the Financial Imagination</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-divider"></div>
+    <p class="footer-text">&copy; 2026 Jooyeon Han</p>
+    <p class="footer-meta">EST 240 &middot; SUNY Korea</p>
+    <p class="footer-est">Anno Domini MMXXVI</p>
+  </div>
+</footer>
+
+</body>
+</html>

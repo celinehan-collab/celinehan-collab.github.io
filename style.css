@@ -1618,3 +1618,40 @@ td {
     height: 48px;
   }
 }
+
+/* ===== Footnote / Citation Jump (added) ===== */
+html { scroll-behavior: smooth; }
+
+a.cite {
+  color: var(--accent);
+  text-decoration: none;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.85em;
+  vertical-align: super;
+  line-height: 0;
+  padding: 0 0.1em;
+  transition: color 0.15s ease;
+}
+a.cite:hover { color: var(--accent-hover); text-decoration: underline; }
+
+/* highlight a reference when jumped to */
+.references li:target {
+  background: var(--bg-card);
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+  border-radius: var(--radius);
+  scroll-margin-top: 90px;
+}
+/* highlight a citation when jumped back to */
+:target.cite { background: var(--accent-light); border-radius: 3px; }
+[id^="cite-"] { scroll-margin-top: 90px; }
+[id^="ref-"] { scroll-margin-top: 90px; }
+
+a.ref-back {
+  color: var(--gold);
+  text-decoration: none;
+  font-size: 0.95em;
+  margin-left: 0.35em;
+  transition: color 0.15s ease;
+}
+a.ref-back:hover { color: var(--accent); }
